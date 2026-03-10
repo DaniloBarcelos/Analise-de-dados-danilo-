@@ -76,26 +76,15 @@ O que você percebe sobre a estrutura do JSON retornado?
 import requests
 import pandas as pd
 
-# 1. Consultar lista de bancos
+
 url = "https://brasilapi.com.br/api/banks/v1"
-
 response = requests.get(url)
-
 dados = response.json()
-
-# 2. Transformar em DataFrame
 df = pd.DataFrame(dados)
-
-# Mostrar as primeiras linhas
 print(df.head())
-
-# 3. Contar quantos bancos existem
 quantidade_bancos = len(df)
 print("Quantidade de bancos:", quantidade_bancos)
-
-# 4. Filtrar bancos cujo nome contenha "Brasil"
 bancos_brasil = df[df["name"].str.contains("Brasil", case=False)]
-
 print("\nBancos que possuem 'Brasil' no nome:")
 print(bancos_brasil)
 
@@ -141,6 +130,34 @@ Exercícios:
 3. Consulte os valores históricos da série.
 4. Transforme em DataFrame.
 """
+import requests
+import pandas as pd
+
+SERCODIGO = "PRECOS12_IPCA12"
+
+url_meta = f"https://www.ipeadata.gov.br/api/odata4/Metadados('{SERCODIGO}')"
+meta_resp = requests.get(url_meta)
+meta = meta_resp.json()["value"][0]
+
+nome = meta.get("SERNOME") or meta.get("NOME") or meta.get("SERIESNOME")
+descricao = meta.get("SERCOMENTARIO") or meta.get("DESCRICAO") or meta.get("SERDESCRICAO")
+unidade = meta.get("UNINOME") or meta.get("UNIDADE") or meta.get("UNIDADEMEDIDA")
+
+print(nome)
+print(descricao)
+print(unidade)
+
+url_valores = f"https://www.ipeadata.gov.br/api/odata4/ValoresSerie(SERCODIGO='{SERCODIGO}')"
+val_resp = requests.get(url_valores)
+
+valores = val_resp.json()["value"]
+
+df = pd.DataFrame(valores)
+
+if "VALDATA" in df.columns:
+    df["VALDATA"] = pd.to_datetime(df["VALDATA"], errors="coerce")
+
+print(df.head())
 # RESOLVA AQUI:
 
 
