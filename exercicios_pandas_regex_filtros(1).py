@@ -256,8 +256,10 @@ df_clientes.loc[filtro]
 # r"@(gmail|outlook)\.com$"
 
 # RESOLUCAO: complete aqui
-
-
+# Exercicio 17
+df_clientes = pd.DataFrame(dados_clientes)
+filtro = df_clientes["email"].str.contains(r"@(gmail|outlook)\.com$", case=False, na=False)
+df_clientes.loc[filtro]
 
 
 # Inclui valores com caixa diferente e um valor ausente.
@@ -279,6 +281,22 @@ df_leads = pd.DataFrame(
 # - regex sugerida para (b): r"^[A-Za-z_ ]+$"
 
 # RESOLUCAO: complete aqui
+df_leads = pd.DataFrame(
+    {
+        "origem": ["Instagram", "instagram", "LinkedIn", "EMAIL", None, "Google Ads"],
+        "campanha": ["Promo Verao", "promo verao", "B2B_Q1", "BLACK_FRIDAY", "Teste", "Leads_2026"],
+    }
+)
+# a)
+filtro = df_leads["origem"].str.contains("instagram", case=False, na=False)
+df_leads.loc[filtro]
+
+# b)
+filtro = df_leads["campanha"].str.contains(r"^[A-Za-z_ ]+$", na=False)
+df_leads.loc[filtro]
+
+# c)
+# o na=False já foi usado acima para não quebrar com valores nulos
 
 
 
