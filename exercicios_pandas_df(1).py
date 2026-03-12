@@ -36,6 +36,12 @@ dados_vendas = {
 
 # RESOLUCAO: complete aqui
 
+df_vendas = pd.DataFrame(dados_vendas)
+
+print(df_vendas.head())
+print(df_vendas.shape)
+print(df_vendas.dtypes)
+
 
 # -------------------------------------------------
 # BLOCO 2: selecionar colunas e linhas
@@ -47,6 +53,9 @@ dados_vendas = {
 # c) Mostre as linhas de indice 2 ate 4
 
 # RESOLUCAO: complete aqui
+print(df_vendas[["mes", "vendas"]])
+print(df_vendas.loc[[0], :])
+print(df_vendas.loc[2:4, :])
 
 
 # -------------------------------------------------
@@ -60,6 +69,15 @@ dados_vendas = {
 
 # RESOLUCAO: complete aqui
 
+filtro = df_vendas["vendas"] > 12000
+print(df_vendas.loc[filtro, :])
+
+filtro = df_vendas["filial"] == "Centro"
+print(df_vendas.loc[filtro, :])
+
+filtro = (df_vendas["vendas"] > 11000) & (df_vendas["filial"] == "Norte")
+print(df_vendas.loc[filtro, :])
+
 
 # -------------------------------------------------
 # BLOCO 4: novas colunas e metricas
@@ -72,6 +90,10 @@ dados_vendas = {
 
 # RESOLUCAO: complete aqui
 
+df_vendas["ticket_medio"] = df_vendas["vendas"] / df_vendas["clientes"]
+df_vendas["meta_batida"] = df_vendas["vendas"] >= 13000
+
+print(df_vendas[["filial", "mes", "ticket_medio", "meta_batida"]])
 
 # -------------------------------------------------
 # BLOCO 5: agregacao com groupby
@@ -83,6 +105,14 @@ dados_vendas = {
 # c) Descubra a filial com maior total de vendas
 
 # RESOLUCAO: complete aqui
+total_vendas_filial = df_vendas.groupby("filial")["vendas"].sum()
+print(total_vendas_filial)
+
+media_clientes_mes = df_vendas.groupby("mes")["clientes"].mean()
+print(media_clientes_mes)
+
+filial_maior_venda = df_vendas.groupby("filial")["vendas"].sum().idxmax()
+print(filial_maior_venda)
 
 
 # -------------------------------------------------
@@ -96,7 +126,13 @@ dados_vendas = {
 
 # RESOLUCAO: complete aqui
 
+df_ordenado = df_vendas.sort_values(by="vendas", ascending=False)
+print(df_ordenado)
 
+top_3 = df_vendas.sort_values(by="vendas", ascending=False).head(3)
+print(top_3)
+
+print(df_ordenado[["filial", "mes", "vendas"]])
 # -------------------------------------------------
 # BLOCO 7: desafio final de analise
 # -------------------------------------------------
@@ -110,6 +146,18 @@ dados_vendas = {
 # 3) Exiba qual filial teve melhor desempenho geral
 
 # RESOLUCAO: complete aqui
+
+resumo_filial = df_vendas.groupby("filial").agg(
+    total_vendas=("vendas", "sum"),
+    media_ticket_medio=("ticket_medio", "mean"),
+    total_clientes=("clientes", "sum")
+)
+
+resumo_filial = resumo_filial.sort_values(by="total_vendas", ascending=False)
+print(resumo_filial)
+
+melhor_filial = resumo_filial.index[0]
+print(melhor_filial)
 
 
 # ---------------------

@@ -113,8 +113,8 @@ df.loc[filtro, :]
 Filtre nomes com três palavras
 """
 # RESOLUCAO
-
-
+filtro = df["nome_aluno"].astype(str).str.contains(r"^[A-Za-z]+ [A-Za-z]+ [A-Za-z]+$", case=False)
+df.loc[filtro, :]
 # ---------------------------------------------
 # EXERCICIO 9
 # ---------------------------------------------
@@ -168,7 +168,7 @@ df.loc[filtro, :]
 """
 Filtre nomes que possuem "Maria" ignorando maiúsculas/minúsculas
 """
-filtro = df["nome_aluno"] == "Maria"
+filtro = df["nome_aluno"].str.contains("Maria", case=False)
 df.loc[filtro, :]
 # Dica
 # case=False
@@ -183,6 +183,8 @@ df.loc[filtro, :]
 Filtre nomes que possuem duas palavras
 e terminam com Souza ou Lima ou Rocha
 """
+filtro = df["nome_aluno"].str.contains(r"^\w+\s(?:Souza|Lima|Rocha)$", case=False)
+df.loc[filtro, :]
 # RESOLUCAO
 
 
@@ -277,3 +279,6 @@ df_leads = pd.DataFrame(
 # - regex sugerida para (b): r"^[A-Za-z_ ]+$"
 
 # RESOLUCAO: complete aqui
+
+
+
