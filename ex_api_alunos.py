@@ -81,14 +81,8 @@ url = "https://brasilapi.com.br/api/banks/v1"
 response = requests.get(url)
 dados = response.json()
 df = pd.DataFrame(dados)
+df.head()
 
-======
-print(df.head())
-quantidade_bancos = len(df)
-print("Quantidade de bancos:", quantidade_bancos)
-bancos_brasil = df[df["name"].str.contains("Brasil", case=False)]
-print("\nBancos que possuem 'Brasil' no nome:")
-print(bancos_brasil)
 
 # ===========================================================
 # PARTE 4 – SERVIÇO DE DADOS IBGE
@@ -116,11 +110,8 @@ url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
 
 response = requests.get(url)
 response.status_code
-
 dados = response.json()
-
 df = pd.json_normalize(dados)
-
 df.head()
 # ===========================================================
 # PARTE 5 – IPEA DATA
