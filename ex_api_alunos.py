@@ -81,13 +81,14 @@ url = "https://brasilapi.com.br/api/banks/v1"
 response = requests.get(url)
 dados = response.json()
 df = pd.DataFrame(dados)
+
+======
 print(df.head())
 quantidade_bancos = len(df)
 print("Quantidade de bancos:", quantidade_bancos)
 bancos_brasil = df[df["name"].str.contains("Brasil", case=False)]
 print("\nBancos que possuem 'Brasil' no nome:")
 print(bancos_brasil)
-
 
 # ===========================================================
 # PARTE 4 – SERVIÇO DE DADOS IBGE
@@ -108,13 +109,19 @@ Consultar a população total de um estado específico.
 """
 # RESOLVA AQUI:
 
-url="https://servicodados.ibge.gov.br/api/docs/"
+import requests
+import pandas as pd
+
+url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
+
 response = requests.get(url)
 response.status_code
-dados = response.json()[0]["minicipios"]
-df = pd.DataFrame(dados)
 
+dados = response.json()
 
+df = pd.json_normalize(dados)
+
+df.head()
 # ===========================================================
 # PARTE 5 – IPEA DATA
 # ===========================================================
@@ -130,34 +137,22 @@ Exercícios:
 3. Consulte os valores históricos da série.
 4. Transforme em DataFrame.
 """
+print(df.columns)
 import requests
 import pandas as pd
 
-SERCODIGO = "PRECOS12_IPCA12"
+url = "http://www.ipeadata.gov.br/api/odata4/Metadados"
 
-url_meta = f"https://www.ipeadata.gov.br/api/odata4/Metadados('{SERCODIGO}')"
-meta_resp = requests.get(url_meta)
-meta = meta_resp.json()["value"][0]
+response = requests.get(url)
 
-nome = meta.get("SERNOME") or meta.get("NOME") or meta.get("SERIESNOME")
-descricao = meta.get("SERCOMENTARIO") or meta.get("DESCRICAO") or meta.get("SERDESCRICAO")
-unidade = meta.get("UNINOME") or meta.get("UNIDADE") or meta.get("UNIDADEMEDIDA")
+dados = response.json()["value"]
 
-print(nome)
-print(descricao)
-print(unidade)
+df = pd.DataFrame(dados)
 
-url_valores = f"https://www.ipeadata.gov.br/api/odata4/ValoresSerie(SERCODIGO='{SERCODIGO}')"
-val_resp = requests.get(url_valores)
+df = df[["SERCODIGO", "SERNOME", "SERCOMENTARIO"]]
 
-valores = val_resp.json()["value"]
+df.head()
 
-df = pd.DataFrame(valores)
-
-if "VALDATA" in df.columns:
-    df["VALDATA"] = pd.to_datetime(df["VALDATA"], errors="coerce")
-
-print(df.head())
 # RESOLVA AQUI:
 
 
@@ -185,8 +180,21 @@ Exercícios:
 4. Plote gráfico de linha.
 """
 # RESOLVA AQUI:
+codigo = 4189
 
+url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados"
 
+params = {
+    "formato": "json",
+    "dataInicial": "01/01/2024",
+    "dataFinalCotacao": "31/12/2024"
+}
+
+response = requests.get(url, params=params)
+response.status_code
+dados = response.json()
+df = pd.DataFrame(dados)
+df.head()
 
 # ===========================================================
 # PARTE 7 – FOOTBALL-DATA.ORG
