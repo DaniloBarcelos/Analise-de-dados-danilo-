@@ -15,7 +15,7 @@ DATA_BASE = "2026-03-28"
 TOP_N     = 20
 
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-kmk
+
 # %%
 # ----- 1. BUSCAR DADOS DO PLANILHÃO -----
 resp = requests.get(
